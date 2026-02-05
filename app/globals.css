@@ -1,26 +1,152 @@
 @import "tailwindcss";
 
+/* Fondo oscuro + gradientes sutiles. Minimalista. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1a1724;
+  --background-card: #252030;
+  --foreground: #f5f3f8;
+  --foreground-muted: rgba(255, 255, 255, 0.6);
+  --vura: #6b5b7a;
+  --vura-light: #8f7d9e;
+  --vura-muted: rgba(255, 255, 255, 0.08);
+  --vura-subtle: rgba(255, 255, 255, 0.12);
+  /* Gradientes tipo template */
+  --gradient-radial-top: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(107, 91, 122, 0.2) 0%, transparent 55%);
+  --gradient-radial-center: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(107, 91, 122, 0.08) 0%, transparent 60%);
+  --gradient-text: linear-gradient(135deg, #ffffff 0%, #c4b8d4 50%, #8f7d9e 100%);
+  --gradient-border: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-vura: var(--vura);
+  --color-vura-light: var(--vura-light);
+  --color-vura-muted: var(--vura-muted);
+  --color-vura-subtle: var(--vura-subtle);
+  --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
+  min-height: 100vh;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Patrón de cuadrícula sutil (estilo INTERFACE) */
+main {
+  background: var(--gradient-radial-top), var(--background);
+  position: relative;
+}
+
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+main > section {
+  position: relative;
+  z-index: 1;
+}
+
+.text-gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* INTERFACE-style: split-flap / flip-in headline */
+@keyframes flip-in {
+  from {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+}
+
+.animate-flip-in {
+  animation: flip-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.hero-flip {
+  opacity: 0;
+}
+
+/* Section reveal (minimalist scroll animation) */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out forwards;
+}
+
+/* Intro: logo entra con suavidad */
+@keyframes intro-logo {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-logo {
+  animation: intro-logo 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Orbes / flotación */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -15px) scale(1.05); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(calc(-50% + 15px), calc(-50% - 10px)) scale(1.08); }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+/* Glow en hover para cards */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(107, 91, 122, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(107, 91, 122, 0.35); }
+}
+
+.card-glow:hover {
+  animation: glow-pulse 2.5s ease-in-out infinite;
 }
